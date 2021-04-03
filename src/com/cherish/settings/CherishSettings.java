@@ -25,6 +25,9 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Surface;
 import android.preference.Preference;
+import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.android.settings.R;
 import com.cherish.settings.preferences.Utils;
 
@@ -43,6 +46,22 @@ public class CherishSettings extends SettingsPreferenceFragment {
         // DeviceParts
         if (!Utils.isPackageInstalled(getActivity(), KEY_DEVICE_PART_PACKAGE_NAME)) {
             getPreferenceScreen().removePreference(findPreference(KEY_DEVICE_PART));
+        }
+    }
+
+        @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        int currentNightMode = getContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                // Night mode is not active, we're using the light theme
+                getListView().setBackgroundResource(R.drawable.cherish_background);
+                break;
+            case Configuration.UI_MODE_NIGHT_YES:
+                // Night mode is active, we're using dark theme
+                getListView().setBackgroundResource(R.drawable.cherish_background_dark);
+                break;
         }
     }
 
